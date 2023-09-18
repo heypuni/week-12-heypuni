@@ -1,6 +1,7 @@
 import { Text } from '../../components'
-import { Input } from 'antd';
+import { Input, Button } from 'antd';
 import { useFormik } from 'formik';
+import { useState } from 'react';
 import * as yup from 'yup';
 
 interface AddressInfo {
@@ -22,7 +23,7 @@ const validationSchema = yup.object({
     state: yup.string().required('Select Your State Here'),
     city: yup.string().required('Select Your City Here'),
     zipcode: yup.number().required('Enter your Zip Code Here'),
-  })
+})
 
 const AddressInformation = () => {
 
@@ -35,7 +36,23 @@ const AddressInformation = () => {
       onSubmit: handleSubmit,
       validationSchema: validationSchema
     })
-  
+
+    const [page, setPage] = useState<number>(1);
+
+    const handleNext = () => {
+       if(page === 1 || page === 2) {
+        setPage((prevPage) => prevPage+1);
+    }
+    return
+  }
+
+    const handlePrev = () => {
+      if(page === 2 || page === 3) {
+        setPage((prevPage) => prevPage - 1);
+    }
+    return
+  }
+
       return (
           <form onSubmit={formMik.handleSubmit}>
             <div>  
@@ -88,7 +105,27 @@ const AddressInformation = () => {
                   <Text> {formMik.errors.zipcode} </Text>
               )}
             </div>
-              
+            
+            <div>
+                <Button onClick={handlePrev} >Previous</Button>
+                <Button type="primary" 
+                onClick={() => {
+                if (!formMik.values.address) {
+                  formMik.setFieldError('address', 'Please enter your Address');
+                } if (!formMik.values.state){
+                  formMik.setFieldError('state', 'Please enter your State');
+                } if (!formMik.values.city){
+                  formMik.setFieldError('city', 'Please enter your City');
+                } if (formMik.values.zipcode === 0){
+                  formMik.setFieldError('zipcode', 'Please enter your Zip Code');
+                  return;
+                } else {
+                  handleNext();
+                }
+              }} >
+              Next
+              </Button>
+              </div>
           </form>
       )
   }

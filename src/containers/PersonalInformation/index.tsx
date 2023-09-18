@@ -1,5 +1,6 @@
 import { Text } from '../../components'
-import { Input } from 'antd';
+import { useState } from 'react';
+import { Input, Button } from 'antd';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 
@@ -18,9 +19,10 @@ const initialValues = {
 const validationSchema = yup.object({
     name: yup.string().required('Enter your full name'),
     email: yup.string().email('Invalid email').required('Required'),
-    dateOfBirth: yup.string().matches(/^([0-9]{2})\.([0-9]{2})\.([0-9]{4})$/, 'Date must be in format dd-mm-yyyy').required(
+    dateOfBirth: yup.string().matches(/^([0-9]{2})-([0-9]{2})-([0-9]{4})$/, 'Date must be in format dd-mm-yyyy').required(
         'Enter your date of birth (dd-mm-yyyy)'),
 })
+
 
 const PersonalInformation = () => {
 
@@ -33,6 +35,16 @@ const PersonalInformation = () => {
         onSubmit: handleSubmit,
         validationSchema: validationSchema
     })
+
+    const [page, setPage] = useState<number>(1);
+
+    const handleNext = () => {
+      if(page === 1 || page === 2) {
+        setPage((prevPage) => prevPage+1);
+    }
+
+    return
+  }
 
     return (
         <>
@@ -55,9 +67,7 @@ const PersonalInformation = () => {
             status={formMik.errors.email && 'error'} />
 
             {formMik.errors.email && (
-              <>
                 <Text>{formMik.errors.email}</Text>
-              </>
             )}
           </div>
 
@@ -68,12 +78,27 @@ const PersonalInformation = () => {
             status={formMik.errors.dateOfBirth && 'error'} />
 
             {formMik.errors.dateOfBirth && (
-              <>
-                <Text> {formMik.errors.dateOfBirth} </Text>
-              </>
+                <Text> {formMik.errors.dateOfBirth} </Text>    
             )}
           </div>
-        
+          <div>
+
+          <Button type="primary" 
+              onClick={() => {
+                if (!formMik.values.name) {
+                formMik.setFieldError('name', 'Please Input  Your Name');
+              } if (!formMik.values.email) {
+                formMik.setFieldError('email', 'Please Input Your Email');
+              } if (!formMik.values.dateOfBirth) {
+                formMik.setFieldError('dateOfBirth', 'Please Input Your Birthdate [dd-mm-yyyy]');
+                  return;
+              } else {
+                handleNext();
+              }
+            }} >
+              Next
+          </Button>
+        </div>
         </>
     )
 }

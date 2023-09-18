@@ -66,14 +66,19 @@ const AccountInformation = () => {
       )}
     </div>
 
+    <Button onClick={handlePrev}>Previous</Button>
+    <Button  htmlType='submit' type="primary" 
+        onClick={() => {
+            if (!formMik.values.username) {
+                  formMik.setFieldError('username', 'Please enter your Username');
+            } if (!formMik.values.password) {
+                  formMik.setFieldError('email', 'Please enter your Password');
+            return
+          } 
+        }} >
+        Submit
+    </Button>
 
-    {page === 3 && (
-        <div>
-          <Button onClick={handlePrev}>Previous</Button>
-          <Button htmlType={'submit'}>Submit </Button>
-        </div>
-
-    )}
     </form>
   )
 };

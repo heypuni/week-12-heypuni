@@ -10,54 +10,31 @@ interface DataUser {
 
 const Register = () => {
 
-    const [name, setName] = useState<string>();
-    const [email, setEmail] = useState<string>();
-    const [gender, setGender] = useState<string>();
-    const [address, setAddress] = useState<string>();
-    const [users, setUsers] = useState<DataUser[]>([]);
-
-    const handleChangeName = (event: ChangeEvent<HTMLInputElement>) => {
-        setName(event.target.value)
+    const handleSubmit = (values: RegistrationInfo) => {
+        console.log(values)
     }
 
-    const handleChangeEmail = (event: ChangeEvent<HTMLInputElement>) => {
-        setEmail(event.target.value)
+    const formMik = useFormik({
+        initialValues: initialValues,
+        onSubmit: handleSubmit,
+        validationSchema: validationSchema
+    })
+
+    const [page, setPage] = useState<number>(1);
+
+    const handleNext = () => {
+        if(page === 1 || page === 2) {
+            setPage((prevPage) => prevPage + 1);
+        }
+        return
     }
 
-    const handleChangeGender = (event: ChangeEvent<HTMLInputElement>) => {
-        setGender(event.target.value)
-    }
-
-    const handleChangeAddress = (event: ChangeEvent<HTMLInputElement>) => {
-        setAddress(event.target.value)
-    }
-
-    const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
-
-        setUsers((prevState) => [...prevState, {
-            name: name,
-            email: email,
-            gender: 'M',
-            address: address
-        }])
-
-    }
-
-
-    const renderTableBody = () => {
-        return (
-            <>
-                {users.map((v, index) => (
-                    <tr key={index}>
-                        <td>{v.name}</td>
-                        <td>{v.email}</td>
-                        <td>{v.gender}</td>
-                        <td>{v.address}</td>
-                    </tr>
-                ))}
-            </>
-        )
+    const handlePrev = () => {
+        if(page === 2 || page === 3) {
+            setPage((prevPage) => prevPage - 1);
+        }
+    
+        return
     }
 
     return (
