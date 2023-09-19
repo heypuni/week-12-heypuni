@@ -10,8 +10,8 @@ interface Info {
 }
 
 interface Props {
-  handlePrev: () => void;
-  handleNext: () => void;
+    handlePrev: () => void;
+    handleNext: () => void;
 }
 
 const initialValues = {
@@ -95,6 +95,7 @@ const PersonalInformation = ( props: Props ) => {
           </Button>
         </div>
         </>
+        
     )
 }
 

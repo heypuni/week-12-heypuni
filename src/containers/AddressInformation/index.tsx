@@ -44,6 +44,7 @@ const AddressInformation = ( props: Props ) => {
 
       return (
           <form onSubmit={formMik.handleSubmit}>
+           
             <div>  
               <Text>Address</Text>
               <Input placeholder="Please Input Your Address" autoComplete='street-address'
