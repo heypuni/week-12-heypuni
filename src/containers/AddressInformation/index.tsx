@@ -1,7 +1,6 @@
 import { Text } from '../../components'
 import { Input, Button } from 'antd';
 import { useFormik } from 'formik';
-import { useState } from 'react';
 import * as yup from 'yup';
 
 interface AddressInfo {
@@ -18,17 +17,23 @@ const initialValues = {
     zipcode: 1
 }
 
+interface Props {
+  handlePrev: () => void;
+  handleNext: () => void;
+}
+
 const validationSchema = yup.object({
-    address: yup.string().required('Enter Your Street Address Here'),
-    state: yup.string().required('Select Your State Here'),
-    city: yup.string().required('Select Your City Here'),
-    zipcode: yup.number().required('Enter your Zip Code Here'),
+    address: yup.string().required('Input Your Street Address Here'),
+    state: yup.string().required('Input Your State Here'),
+    city: yup.string().required('Input Your City Here'),
+    zipcode: yup.number().required('Input your Zip Code Here'),
 })
 
-const AddressInformation = () => {
+const AddressInformation = ( props: Props ) => {
 
     const handleSubmit = (values: AddressInfo) => {
       console.log(values)
+      props.handleNext()
     }
   
     const formMik = useFormik({
@@ -36,22 +41,6 @@ const AddressInformation = () => {
       onSubmit: handleSubmit,
       validationSchema: validationSchema
     })
-
-    const [page, setPage] = useState<number>(1);
-
-    const handleNext = () => {
-       if(page === 1 || page === 2) {
-        setPage((prevPage) => prevPage+1);
-    }
-    return
-  }
-
-    const handlePrev = () => {
-      if(page === 2 || page === 3) {
-        setPage((prevPage) => prevPage - 1);
-    }
-    return
-  }
 
       return (
           <form onSubmit={formMik.handleSubmit}>
@@ -70,7 +59,7 @@ const AddressInformation = () => {
 
             <div>
               <Text>State</Text>
-              <Input 
+              <Input placeholder="Please Input Your State"
               value={formMik.values.state} 
               onChange={formMik.handleChange('state')}
               status={formMik.errors.state && 'error'} />
@@ -82,7 +71,7 @@ const AddressInformation = () => {
   
 
             <div>
-              <Text >City</Text>
+              <Text>City</Text>
               <Input name="city" placeholder="Please Input Your City" autoComplete='city'
               value={formMik.values.city} 
               onChange={formMik.handleChange('city')}
@@ -107,7 +96,7 @@ const AddressInformation = () => {
             </div>
             
             <div>
-                <Button onClick={handlePrev} >Previous</Button>
+                <Button onClick={props.handlePrev} >Previous</Button>
                 <Button type="primary" 
                 onClick={() => {
                 if (!formMik.values.address) {
@@ -120,7 +109,7 @@ const AddressInformation = () => {
                   formMik.setFieldError('zipcode', 'Please enter your Zip Code');
                   return;
                 } else {
-                  handleNext();
+                  props.handleNext();
                 }
               }} >
               Next

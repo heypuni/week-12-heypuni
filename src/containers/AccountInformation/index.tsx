@@ -1,12 +1,16 @@
-import { Text } from '../../components'
+import { Password, Text } from '../../components'
 import { Input, Button } from 'antd';
-import { useState } from 'react';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 
 interface AccountInfo {
     username?: string;
     password?: string;
+}
+
+interface Props {
+    handlePrev: () => void;
+    handleNext: () => void;
 }
 
 const initialValues = {
@@ -16,22 +20,15 @@ const initialValues = {
 
 const validationSchema = yup.object({
     username: yup.string().required('Please Enter Your Username'),
-    password: yup.string().required('Please Select Your Password'),
+    password: yup.string().required('Please Enter Your Password'),
 })
 
-const AccountInformation = () => {
-    const [page, setPage] = useState<number>(1);
+const AccountInformation = ( props: Props ) => {
 
-     const handlePrev = () => {
-    if(page === 2 || page === 3) {
-        setPage((prevPage) => prevPage - 1);
-    }
-
-    return
-}
-
-    const handleSubmit = (values: AccountInfo) => {
-        console.log(values)
+    const handleSubmit = ( e: AccountInfo ) => {
+        console.log(e)
+        // e?.preventDefault()
+        // props.handleNext()
     }
 
     const formMik = useFormik({
@@ -56,7 +53,7 @@ const AccountInformation = () => {
 
     <div>
       <Text>Password</Text>
-      <Password 
+      <Password placeholder="Your Password Here"
       value={formMik.values.password} 
       onChange={formMik.handleChange('password')}
       status={formMik.errors.password && 'error'}/>
@@ -66,16 +63,17 @@ const AccountInformation = () => {
       )}
     </div>
 
-    <Button onClick={handlePrev}>Previous</Button>
-    <Button  htmlType='submit' type="primary" 
+    <Button onClick={props.handlePrev}>Previous</Button>
+    <Button type="primary" 
         onClick={() => {
             if (!formMik.values.username) {
                   formMik.setFieldError('username', 'Please enter your Username');
             } if (!formMik.values.password) {
-                  formMik.setFieldError('email', 'Please enter your Password');
-            return
+                  formMik.setFieldError('password', 'Please enter your Password');
           } 
-        }} >
+          formMik.handleSubmit()
+        }} 
+        >
         Submit
     </Button>
 

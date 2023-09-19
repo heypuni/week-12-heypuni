@@ -1,5 +1,4 @@
 import { Text } from '../../components'
-import { useState } from 'react';
 import { Input, Button } from 'antd';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
@@ -8,6 +7,11 @@ interface Info {
     name?: string;
     email?: string;
     dateOfBirth?: string;
+}
+
+interface Props {
+  handlePrev: () => void;
+  handleNext: () => void;
 }
 
 const initialValues = {
@@ -24,10 +28,11 @@ const validationSchema = yup.object({
 })
 
 
-const PersonalInformation = () => {
+const PersonalInformation = ( props: Props ) => {
 
     const handleSubmit = (values: Info) => {
         console.log(values);
+        props.handleNext()
     }
 
     const formMik = useFormik({
@@ -35,16 +40,6 @@ const PersonalInformation = () => {
         onSubmit: handleSubmit,
         validationSchema: validationSchema
     })
-
-    const [page, setPage] = useState<number>(1);
-
-    const handleNext = () => {
-      if(page === 1 || page === 2) {
-        setPage((prevPage) => prevPage+1);
-    }
-
-    return
-  }
 
     return (
         <>
@@ -93,7 +88,7 @@ const PersonalInformation = () => {
                 formMik.setFieldError('dateOfBirth', 'Please Input Your Birthdate [dd-mm-yyyy]');
                   return;
               } else {
-                handleNext();
+                props.handleNext();
               }
             }} >
               Next

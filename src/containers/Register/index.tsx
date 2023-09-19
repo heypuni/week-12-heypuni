@@ -1,12 +1,12 @@
-import { ChangeEvent, FormEvent, useState } from 'react';
-import { Table } from '../../components';
+import { useState } from 'react';
+import { AccountInformation, AddressInformation, PersonalInformation } from '../../containers';
+import * as yup from 'yup'; 
+import { Button } from 'antd';
 
-interface DataUser {
-    name?: string;
-    email?: string;
-    gender?: 'M' | 'F';
-    address?: string;
-}
+const validationSchema = yup.object({
+    username: yup.string().required('Please Enter Your Username'),
+    password: yup.string().required('Please Select Your Password'),
+})
 
 const Register = () => {
 
@@ -20,17 +20,17 @@ const Register = () => {
         validationSchema: validationSchema
     })
 
-    const [page, setPage] = useState<number>(1);
+    const [page, setPage] = useState<number>(0);
 
     const handleNext = () => {
-        if(page === 1 || page === 2) {
+        if(page === 0 || page === 1) {
             setPage((prevPage) => prevPage + 1);
         }
         return
     }
 
     const handlePrev = () => {
-        if(page === 2 || page === 3) {
+        if(page === 1 || page === 2) {
             setPage((prevPage) => prevPage - 1);
         }
     
@@ -38,30 +38,20 @@ const Register = () => {
     }
 
     return (
-        <>
-            <form onSubmit={handleSubmit}>
-                <div>
-                    <label>Name</label>
-                    <input type="text" value={name} name="name" onBlur={handleChangeName}/>
-                </div>
-                <div>
-                    <label>Email</label>
-                    <input type="text" value={email} name="email" onBlur={handleChangeEmail}/>
-                </div>
-                <div>
-                    <label>Email</label>
-                    <input type="text" value={gender} name="email" onBlur={handleChangeGender}/>
-                </div>
-                <div>
-                    <label>Email</label>
-                    <input type="text" value={address} name="email" onBlur={handleChangeAddress}/>
-                </div>
-                <button type="submit">Submit Form</button>
-            </form>
-            <Table headers={['Nama','Email', 'Gender', 'Address']} children={renderTableBody()} />
-            <hr />9
+     <>
+        <form onSubmit={handleSubmit}>
+            {page === 0 && 
+                <PersonalInformation />
+            }
+            {page === 1 && 
+                <AddressInformation />
+            }
+            {page === 2 &&
+                <AccountInformation />
+            }
 
-        </>
+        </form>
+     </>
     )
 
 }
