@@ -1,7 +1,9 @@
 import './App.css'
 import { Register } from './containers';
 
+
 const App = () => {
+
 
   return (
     < Register handlePrev={function (): void {

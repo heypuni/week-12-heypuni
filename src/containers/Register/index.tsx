@@ -53,18 +53,7 @@ const validationSchema = yup.object({
 })
 
 
-const Register = ( props: Props ) => {
-
-    const handleSubmit = (values: RegistInfo) => {
-        console.log(values);    
-        props.handleNext()
-    }
-
-    const formMik = useFormik({
-        initialValues: initialValues,
-        onSubmit: handleSubmit,
-        validationSchema: validationSchema
-    })
+const Register = ( props: Props )  => {
 
     const [page, setPage] = useState<number>(0);
 
@@ -84,9 +73,20 @@ const Register = ( props: Props ) => {
     return
     }
 
+    const handleSubmit = (values: RegistInfo) => {
+        console.log(values);    
+        props.handleNext()
+    }
+
+    const formMik = useFormik({
+        initialValues: initialValues,
+        onSubmit: handleSubmit,
+        validationSchema: validationSchema
+    })
+
     return (
         <form onSubmit={formMik.handleSubmit}>
-          {page === 1 && (
+          {page === 0 && (
            <>
             <div>
                 <Text> Full Name </Text>
@@ -121,29 +121,10 @@ const Register = ( props: Props ) => {
                 <Text> {formMik.errors.dateOfBirth} </Text>    
             )}
           </div>
-
-          <div>
-            <Button type="primary" 
-                onClick={() => {
-                    if (!formMik.values.name) {
-                    formMik.setFieldError('name', 'Please Input  Your Name');
-                } if (!formMik.values.email) {
-                    formMik.setFieldError('email', 'Please Input Your Email');
-                } if (!formMik.values.dateOfBirth) {
-                    formMik.setFieldError('dateOfBirth', 'Please Input Your Birthdate [dd-mm-yyyy]');
-                    return;
-                } else {
-                    props.handleNext();
-                }
-                }} >
-                Next
-            </Button>
-            </div>
-           handleNext={handleNext} handlePrev={handlePrev}
          </>
         )}
 
-        {page === 2 && (
+        {page === 1 && (
          <>
             <div>  
                 <Text>Address</Text>
@@ -192,32 +173,10 @@ const Register = ( props: Props ) => {
                     <Text> {formMik.errors.zipcode} </Text>
                 )}
             </div>
-
-            <div>
-                <Button onClick={props.handlePrev} >Previous</Button>
-                <Button type="primary" 
-                onClick={() => {
-                if (!formMik.values.address) {
-                formMik.setFieldError('address', 'Please enter your Address');
-                } if (!formMik.values.state){
-                formMik.setFieldError('state', 'Please enter your State');
-                } if (!formMik.values.city){
-                formMik.setFieldError('city', 'Please enter your City');
-                } if (formMik.values.zipcode === 0){
-                formMik.setFieldError('zipcode', 'Please enter your Zip Code');
-                return;
-                } else {
-                props.handleNext();
-                }
-                }} >
-                Next
-                </Button>
-            </div>
-            handleNext={handleNext} handlePrev={handlePrev}
           </>  
         )}
 
-        { page === 3 && (
+        { page === 2 && (
           <>
              <div>
                <Text>Username</Text>
@@ -242,23 +201,69 @@ const Register = ( props: Props ) => {
                    <Text> {formMik.errors.password} </Text>
                )}
              </div>
-         
-             <Button onClick={props.handlePrev}>Previous</Button>
-             <Button type="primary" 
-                 onClick={() => {
-                     if (!formMik.values.username) {
-                           formMik.setFieldError('username', 'Please enter your Username');
-                     } if (!formMik.values.password) {
-                           formMik.setFieldError('password', 'Please enter your Password');
-                   } 
-                   formMik.handleSubmit()
-                 }} 
-                 >
-                 Submit
-             </Button>
-            handleNext={handleNext} handlePrev={handlePrev} 
           </>    
         )}
+
+            {page === 0 && (
+                <div>
+                <Button type="primary"
+                    onClick={() => {
+                        if (!formMik.values.name) {
+                        formMik.setFieldError('name', 'Please Input  Your Name');
+                    } if (!formMik.values.email) {
+                        formMik.setFieldError('email', 'Please Input Your Email');
+                    } if (!formMik.values.dateOfBirth) {
+                        formMik.setFieldError('dateOfBirth', 'Please Input Your Birthdate [dd-mm-yyyy]');
+                        return;
+                    } else {
+                        props.handleNext();
+                    }
+                    }} >
+                    Next
+                </Button>
+                </div>
+            )}
+
+            {page === 1 && (
+                <div>
+                    <Button onClick={props.handlePrev} >Previous</Button>
+                    <Button type="primary" 
+                    onClick={() => {
+                    if (!formMik.values.address) {
+                    formMik.setFieldError('address', 'Please enter your Address');
+                    } if (!formMik.values.state){
+                    formMik.setFieldError('state', 'Please enter your State');
+                    } if (!formMik.values.city){
+                    formMik.setFieldError('city', 'Please enter your City');
+                    } if (formMik.values.zipcode === 0){
+                    formMik.setFieldError('zipcode', 'Please enter your Zip Code');
+                    return;
+                    } else {
+                    props.handleNext();
+                    }
+                    }} >
+                    Next
+                    </Button>
+                </div>
+            )}
+
+            { page === 2 && (
+                <div>
+                    <Button onClick={props.handlePrev}>Previous</Button>
+                    <Button type="primary" 
+                        onClick={() => {
+                            if (!formMik.values.username) {
+                                formMik.setFieldError('username', 'Please enter your Username');
+                            } if (!formMik.values.password) {
+                                formMik.setFieldError('password', 'Please enter your Password');
+                        } 
+                        formMik.handleSubmit()
+                        }} 
+                        >
+                        Submit
+                    </Button>
+                </div>
+            )}
       </form>
     )
 }
